@@ -18,6 +18,10 @@ func init() {
 }
 
 func runForward(c *cli.Context) {
+	if c.Bool("d") {
+		log.SetLevel(log.DebugLevel)
+	}
+
 	path := c.String("c")
 
 	mqconf, inconf, err := LoadConf(path)
@@ -45,6 +49,10 @@ func main() {
 					Name:  "c",
 					Usage: "Config file path",
 					Value: "~/.mqforward.ini",
+				},
+				cli.BoolFlag{
+					Name:  "d",
+					Usage: "enable debug messages.",
 				},
 			},
 			Action: runForward,
