@@ -1,9 +1,9 @@
 mqforward
 =====================
 
-mqforward is forwarder from MQTT to influxdb.
+mqforward is forwarder from MQTT to Influxdb.
 This subscribes a topic with wildcard and forward a payload to
-influxdb. The value should be JSON or msgpack.
+Influxdb. The value should be JSON or msgpack.
 
 for example,
 
@@ -15,6 +15,8 @@ in the influxdb,
 - value ``a=1 and b=2`` into the a.b series. so you can ``SELECT a, b FROM a.b``
 
 
+If udp is true in the config, send series over UDP to InfluxDB. otherwise, use HTTP.
+  
 usage
 ---------
 
@@ -42,11 +44,11 @@ automatically.
 
    [mqforward-influxdb]
    hostname = 127.0.0.1
-   port = 4444  # for UDP
+   port = 4444
    db = test
    username = root
    password = root
-   udp = true
+   udp = true  # true if use UDP or false
 
 run
 +++++++++++++++
