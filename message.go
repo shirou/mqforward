@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 
 	msgpack "gopkg.in/vmihailenco/msgpack.v1"
 )
@@ -20,12 +19,10 @@ func MsgParse(payload []byte) ([]string, []interface{}, error) {
 
 	// first, try msgpack
 	err := msgpack.Unmarshal(payload, &j)
-	fmt.Println("msgpack", err)
 	if err != nil {
 		// next, try json
 		err := json.Unmarshal(payload, &j)
 		if err != nil { // fail
-			fmt.Println("json")
 			return []string{}, make([]interface{}, 0, 0), err
 		}
 	}
