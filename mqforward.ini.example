@@ -1,0 +1,17 @@
+[general]
+debug = true
+
+[mqforward-mqtt]
+hostname= test.mosquitto.org
+port = 1883
+username= ""
+password= ""
+topic = mqforward/#
+
+[mqforward-influxdb]
+hostname = 127.0.0.1
+port = 4444  # for UDP
+db = test
+username = user
+password = password
+udp = true
