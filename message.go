@@ -30,6 +30,9 @@ func MsgParse(payload []byte) ([]string, []interface{}, error) {
 	keys := make([]string, 0, len(j))
 	values := make([]interface{}, 0, len(j))
 	for k, v := range j {
+		if k == "time" {
+			k = "_time"
+		}
 		keys = append(keys, k)
 		values = append(values, v)
 	}
