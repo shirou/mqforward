@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	DefaultTick = 3
+	DefaultTick = 1
 )
 
 type InfluxDBConf struct {
