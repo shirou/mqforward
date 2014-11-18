@@ -7,13 +7,12 @@ influxdb. The value should be JSON or msgpack.
 
 for example,
 
-- Publish `{"a": 1, "b": 2}` to "mqforward/a/b", 
+- Publish ``{"a": 1, "b": 2}`` to "mqforward/a/b", 
 - Subscribe "mqforward/#", 
 
 in the influxdb,
 
-- value `a=1 and b=2` into the a.b series. so you can `SELECT a, b FROM a.b`
-
+- value ``a=1 and b=2`` into the a.b series. so you can ``SELECT a, b FROM a.b``
 
 
 usage
@@ -23,7 +22,8 @@ install
 +++++++++++++++
 
 ::
-   go install github.com/shirou/mqforward
+
+  go get github.com/shirou/mqforward
 
 config
 +++++++++++++++
@@ -60,3 +60,8 @@ or
 ::
 
    mqforward run -c someconfig.ini
+
+license
+-----------
+
+MIT
