@@ -5,8 +5,8 @@ import (
 	"runtime"
 	"strings"
 
-	"code.google.com/p/gcfg"
 	log "github.com/Sirupsen/logrus"
+	gcfg "gopkg.in/gcfg.v1"
 )
 
 type GeneralConf struct {

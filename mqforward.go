@@ -17,40 +17,49 @@ type Forwarder struct {
 	mqclient *MqttClient
 	ifclient *InfluxDBClient
 
-	ifChan chan Message
+	mqttChan    chan Message
+	ifChan      chan Message
+	commandChan chan string
 }
 
 func NewForwarder(mqttconf MqttConf, ifconf InfluxDBConf) (*Forwarder, error) {
-	mqclient, err := NewMqttClient(mqttconf)
+	// channel from MQTT
+	mqttChan := make(chan Message, MaxBufferSize)
+	// channel  to InfluxDB
+	ifChan := make(chan Message, MaxBufferSize)
+	// channel main to MQTT
+	commandChan := make(chan string)
+
+	mqclient, err := NewMqttClient(mqttconf, mqttChan, commandChan)
 	if err != nil {
-		return nil, fmt.Errorf("mqtt: %s", err)
+		return nil, fmt.Errorf("mqtt init err: %s", err)
 	}
-	ifclient, err := NewInfluxDBClient(ifconf)
+	ifclient, err := NewInfluxDBClient(ifconf, ifChan, commandChan)
 	if err != nil {
-		return nil, fmt.Errorf("influxdb: %s", err)
+		return nil, fmt.Errorf("influxdb init err: %s", err)
 	}
+	go ifclient.Start()
 
 	return &Forwarder{
-		mqclient: mqclient,
-		ifclient: ifclient,
+		mqclient:    mqclient,
+		ifclient:    ifclient,
+		mqttChan:    mqttChan,
+		ifChan:      ifChan,
+		commandChan: commandChan,
 	}, nil
 }
 
 func (f *Forwarder) Start() error {
-	command := make(chan string)
-	// channel from MQTT to InfluxDB
-	f.ifChan = make(chan Message, MaxBufferSize)
-
-	err := f.mqclient.Start(command, f.ifChan)
-	if err != nil {
-		return err
+	for {
+		select {
+		case msg, ok := <-f.mqttChan:
+			if !ok {
+				return fmt.Errorf("msg pipe closed")
+			}
+			log.Debug("msg comes from mqtt")
+			f.ifChan <- msg
+		}
 	}
 
-	err = f.ifclient.Start(command, f.ifChan)
-	if err != nil {
-		return err
-	}
-
-	log.Warn("stopped")
-	return fmt.Errorf("mqforward stopped")
+	return fmt.Errorf("quit start loop")
 }

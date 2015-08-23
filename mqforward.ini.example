@@ -2,7 +2,7 @@
 debug = true
 
 [mqforward-mqtt]
-hostname= test.mosquitto.org
+hostname= localhost
 port = 1883
 username= ""
 password= ""
@@ -10,8 +10,7 @@ topic = mqforward/#
 
 [mqforward-influxdb]
 hostname = 127.0.0.1
-port = 4444  # for UDP
+port = 8086
 db = test
-username = user
+username = test
 password = password
-udp = true

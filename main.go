@@ -9,11 +9,11 @@ import (
 )
 
 var usage = `
-Usage here
+mqforward
 `
 
 func init() {
-	log.SetLevel(log.WarnLevel)
+	log.SetLevel(log.InfoLevel)
 	log.SetOutput(colorable.NewColorableStdout())
 }
 

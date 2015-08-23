@@ -14,7 +14,7 @@ type Message struct {
 	Keys   []float64
 }
 
-func MsgParse(payload []byte) ([]string, []interface{}, error) {
+func MsgParse(payload []byte) (map[string]interface{}, error) {
 	var j map[string]interface{}
 
 	// first, try msgpack
@@ -23,19 +23,12 @@ func MsgParse(payload []byte) ([]string, []interface{}, error) {
 		// next, try json
 		err := json.Unmarshal(payload, &j)
 		if err != nil { // fail
-			return []string{}, make([]interface{}, 0, 0), err
+			return j, err
 		}
 	}
-
-	keys := make([]string, 0, len(j))
-	values := make([]interface{}, 0, len(j))
-	for k, v := range j {
-		if k == "time" {
-			k = "_time"
-		}
-		keys = append(keys, k)
-		values = append(values, v)
+	if _, ok := j["time"]; ok {
+		j["_time"] = j["time"]
+		delete(j, "time")
 	}
-
-	return keys, values, nil
+	return j, nil
 }

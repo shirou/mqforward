@@ -5,7 +5,7 @@ from __future__ import division, print_function, absolute_import
 import msgpack
 import paho.mqtt.client as mqtt
 
-MQTTHOST = "test.mosquitto.org"
+MQTTHOST = "localhost"
 
 client = mqtt.Client(protocol=mqtt.MQTTv311)
 
