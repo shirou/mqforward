@@ -23,20 +23,28 @@ usage
 install
 +++++++++++++++
 
+Just `go get` (it takes for a while)
+
 ::
 
-  go get github.com/shirou/mqforward
+  $ go get github.com/shirou/mqforward
+
+then, type
+
+::
+
+  $ go install github.com/shirou/mqforward
+
 
 config
 +++++++++++++++
 
-example is below. if you put this to `~/.mqforward.ini`, load
-automatically.
+Config example is below. If you put config to `~/.mqforward.ini`, it will be loaded automatically.
 
 ::
 
    [mqforward-mqtt]
-   hostname= test.mosquitto.org
+   hostname= localhost
    port = 1883
    username= ""
    password= ""
@@ -48,14 +56,15 @@ automatically.
    db = test
    username = root
    password = root
-   udp = true  # true if use UDP or false
 
 run
 +++++++++++++++
 
+Set path to $GOPATH/bin,
+
 ::
 
-   mqforward run
+   $ mqforward run
 
 or 
 
