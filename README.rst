@@ -12,7 +12,7 @@ for example,
 
 in the influxdb,
 
-- value ``a=1 and b=2`` into the a.b series. so you can ``SELECT a, b FROM a.b``
+- value ``a=1 and b=2`` into the a.b series. so you can ``SELECT a, b FROM "a.b"``
 
 
 If udp is true in the config, send series over UDP to InfluxDB. otherwise, use HTTP.
