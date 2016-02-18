@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	influxdb "github.com/influxdb/influxdb/client"
+	influxdb "github.com/influxdata/influxdb/client"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -31,8 +31,8 @@ func Test_Msg2Series(t *testing.T) {
 	for _, r := range ret.Points {
 		assert.Equal("a.b", r.Measurement)
 		e := map[string]interface{}{
-			"x": 1,
-			"y": 2,
+			"x": float64(1),
+			"y": float64(2),
 		}
 		assert.Equal(e, r.Fields)
 	}

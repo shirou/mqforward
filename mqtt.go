@@ -6,8 +6,8 @@ import (
 	"strings"
 	"sync"
 
-	MQTT "git.eclipse.org/gitroot/paho/org.eclipse.paho.mqtt.golang.git"
 	log "github.com/Sirupsen/logrus"
+	MQTT "github.com/eclipse/paho.mqtt.golang"
 )
 
 const (
