@@ -25,7 +25,7 @@ type MqttConf struct {
 }
 
 type MqttClient struct {
-	Client     *MQTT.Client
+	Client     MQTT.Client
 	Opts       *MQTT.ClientOptions
 	Config     MqttConf
 	Subscribed map[string]byte
@@ -93,7 +93,7 @@ func NewMqttClient(conf MqttConf, mqttChan chan Message, commandChan chan string
 }
 
 // connects MQTT broker
-func (m MqttClient) Connect(conf MqttConf, opts *MQTT.ClientOptions, subscribed map[string]byte) (*MQTT.Client, error) {
+func (m MqttClient) Connect(conf MqttConf, opts *MQTT.ClientOptions, subscribed map[string]byte) (MQTT.Client, error) {
 	m.Client = MQTT.NewClient(m.Opts)
 
 	log.Info("connecting...")
@@ -115,7 +115,7 @@ func getRandomClientId() string {
 	return "mqttforward-" + string(bytes)
 }
 
-func (m *MqttClient) SubscribeOnConnect(client *MQTT.Client) {
+func (m *MqttClient) SubscribeOnConnect(client MQTT.Client) {
 	log.Infof("mqtt connected")
 	log.Infof("subscribed: %v", m.Subscribed)
 
@@ -127,7 +127,7 @@ func (m *MqttClient) SubscribeOnConnect(client *MQTT.Client) {
 		}
 	}
 }
-func (m *MqttClient) ConnectionLost(client *MQTT.Client, reason error) {
+func (m *MqttClient) ConnectionLost(client MQTT.Client, reason error) {
 	log.Errorf("client disconnected: %s", reason)
 }
 
@@ -139,7 +139,7 @@ func (m *MqttClient) Disconnect() error {
 	return nil
 }
 
-func (m *MqttClient) onMessageReceived(client *MQTT.Client, message MQTT.Message) {
+func (m *MqttClient) onMessageReceived(client MQTT.Client, message MQTT.Message) {
 	log.Infof("topic:%s", message.Topic())
 
 	// Remove topic root
