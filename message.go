@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 
-	msgpack "gopkg.in/vmihailenco/msgpack.v1"
+	msgpack "github.com/vmihailenco/msgpack"
 )
 
 type Message struct {
