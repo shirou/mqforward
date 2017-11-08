@@ -2,7 +2,10 @@ package main
 
 import (
 	"crypto/rand"
+	"crypto/tls"
+	"crypto/x509"
 	"fmt"
+	"io/ioutil"
 	"strings"
 	"sync"
 
@@ -20,6 +23,8 @@ type MqttConf struct {
 	Username   string
 	Password   string
 	Cafilepath string
+	ClientCert string
+	PrivateKey string
 	Topic      string
 	Debug      string
 }
@@ -69,6 +74,14 @@ func NewMqttClient(conf MqttConf, mqttChan chan Message, commandChan chan string
 	}
 	subscribed := map[string]byte{
 		topic: byte(0),
+	}
+
+	tlsConfig, ok, err := makeTlsConfig(conf.Cafilepath, conf.ClientCert, conf.PrivateKey, false)
+	if err != nil {
+		return nil, err
+	}
+	if ok {
+		opts.SetTLSConfig(tlsConfig)
 	}
 
 	ret := &MqttClient{
@@ -152,4 +165,54 @@ func (m *MqttClient) onMessageReceived(client MQTT.Client, message MQTT.Message)
 	}
 
 	m.mqttChan <- chun
+}
+
+func getCertPool(pemPath string) (*x509.CertPool, error) {
+	certs := x509.NewCertPool()
+
+	pemData, err := ioutil.ReadFile(pemPath)
+	if err != nil {
+		return nil, err
+	}
+	certs.AppendCertsFromPEM(pemData)
+	return certs, nil
+}
+
+// makeTlsConfig creats new tls.Config. If returned ok is false, does not need set to MQTToption.
+func makeTlsConfig(cafile, cert, key string, insecure bool) (*tls.Config, bool, error) {
+	TLSConfig := &tls.Config{InsecureSkipVerify: false}
+	var ok bool
+	if insecure {
+		TLSConfig.InsecureSkipVerify = true
+		ok = true
+	}
+	if cafile != "" {
+		certPool, err := getCertPool(cafile)
+		if err != nil {
+			return nil, false, err
+		}
+		TLSConfig.RootCAs = certPool
+		ok = true
+	}
+	if cert != "" {
+		certPool, err := getCertPool(cert)
+		if err != nil {
+			return nil, false, err
+		}
+		TLSConfig.ClientAuth = tls.RequireAndVerifyClientCert
+		TLSConfig.ClientCAs = certPool
+		ok = true
+	}
+	if key != "" {
+		if cert == "" {
+			return nil, false, fmt.Errorf("key specified but cert is not specified")
+		}
+		cert, err := tls.LoadX509KeyPair(cert, key)
+		if err != nil {
+			return nil, false, err
+		}
+		TLSConfig.Certificates = []tls.Certificate{cert}
+		ok = true
+	}
+	return TLSConfig, ok, nil
 }
