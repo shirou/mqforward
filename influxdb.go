@@ -17,14 +17,15 @@ const (
 )
 
 type InfluxDBConf struct {
-	Hostname string
-	Port     int
-	Db       string
-	UserName string
-	Password string
-	Tick     int
-	UDP      bool
-	Debug    string
+	Hostname       string
+	Port           int
+	Db             string
+	UserName       string
+	Password       string
+	Tick           int
+	UDP            bool
+	Debug          string
+	TagsAttributes []string
 }
 
 type InfluxDBClient struct {
@@ -50,7 +51,7 @@ func NewInfluxDBClient(conf InfluxDBConf, ifChan chan Message, commandChan chan 
 	}
 	// Make client
 	con, err := influxdb.NewHTTPClient(influxdb.HTTPConfig{
-		Addr: host,
+		Addr:     host,
 		Username: conf.UserName,
 		Password: conf.Password,
 	})
@@ -166,7 +167,6 @@ func (ifc *InfluxDBClient) Msg2Series(msgs []Message) influxdb.BatchPoints {
 		return nil
 	}
 
-
 	for _, msg := range msgs {
 		if msg.Topic == "" && len(msg.Payload) == 0 {
 			break
@@ -178,10 +178,22 @@ func (ifc *InfluxDBClient) Msg2Series(msgs []Message) influxdb.BatchPoints {
 		}
 
 		name := strings.Replace(msg.Topic, "/", ".", -1)
+
+		// Store default tag attributes
 		tags := map[string]string{
 			"topic": msg.Topic,
 		}
-		pt, err := influxdb.NewPoint(name, tags, j, now);
+		// Transform user-defined JSON fields to tags
+		for _, tag := range ifc.Config.TagsAttributes {
+			if v, ok := j[tag]; ok {
+				if tagVal, ok := v.(string); ok {
+					tags[tag] = tagVal
+					delete(j, tag)
+				}
+			}
+		}
+
+		pt, err := influxdb.NewPoint(name, tags, j, now)
 		if err != nil {
 			log.Warn(err)
 			continue

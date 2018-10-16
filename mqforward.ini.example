@@ -14,3 +14,4 @@ port = 8086
 db = test
 username = test
 password = password
+tagsAttributes = key1,key2
