@@ -40,16 +40,6 @@ func LoadConf(path string) (MqttConf, InfluxDBConf, error) {
 		return MqttConf{}, InfluxDBConf{}, err
 	}
 
-	em := MqttConf{}
-	ei := InfluxDBConf{}
-
-	if cfg.Mqtt == em {
-		log.Fatal(`empty "mqforward-mqtt" configuration`)
-	}
-	if cfg.InfluxDB == ei {
-		log.Fatal(`empty "mqforward-influxdb" configuration`)
-	}
-
 	if cfg.General.Debug {
 		log.SetLevel(log.DebugLevel)
 	}
