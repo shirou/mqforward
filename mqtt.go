@@ -153,7 +153,7 @@ func (m *MqttClient) Disconnect() error {
 }
 
 func (m *MqttClient) onMessageReceived(client MQTT.Client, message MQTT.Message) {
-	log.Infof("topic:%s", message.Topic())
+	log.Debugf("topic:%s", message.Topic())
 
 	// Remove topic root
 	ct := strings.TrimRight(m.Config.Topic, "#")
