@@ -4,8 +4,8 @@ import (
 	"os"
 
 	log "github.com/Sirupsen/logrus"
-	"github.com/codegangsta/cli"
 	colorable "github.com/mattn/go-colorable"
+	cli "github.com/urfave/cli/v2"
 )
 
 var usage = `
