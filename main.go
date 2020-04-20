@@ -17,7 +17,7 @@ func init() {
 	log.SetOutput(colorable.NewColorableStdout())
 }
 
-func runForward(c *cli.Context) {
+func runForward(c *cli.Context) error {
 	if c.Bool("d") {
 		log.SetLevel(log.DebugLevel)
 	}
@@ -34,23 +34,23 @@ func runForward(c *cli.Context) {
 		log.Fatal(err)
 	}
 	f.Start()
+	return nil
 }
 
 func main() {
 	app := cli.NewApp()
 	app.Name = "mqforward"
 	app.Usage = usage
-
-	app.Commands = []cli.Command{
+	app.Commands = []*cli.Command{
 		{
 			Name: "run",
 			Flags: []cli.Flag{
-				cli.StringFlag{
+				&cli.StringFlag{
 					Name:  "c",
 					Usage: "Config file path",
 					Value: "~/.mqforward.ini",
 				},
-				cli.BoolFlag{
+				&cli.BoolFlag{
 					Name:  "d",
 					Usage: "enable debug messages.",
 				},

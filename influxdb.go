@@ -7,7 +7,8 @@ import (
 	"time"
 
 	log "github.com/Sirupsen/logrus"
-	influxdb "github.com/influxdata/influxdb/client/v2"
+	_ "github.com/influxdata/influxdb1-client" // this is important because of the bug in go mod
+	influxdb "github.com/influxdata/influxdb1-client/v2"
 	"github.com/oleiade/lane"
 )
 
