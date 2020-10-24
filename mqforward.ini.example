@@ -2,13 +2,15 @@
 debug = true
 
 [mqforward-mqtt]
-hostname= localhost
+hostname = localhost
 port = 1883
 username= ""
 password= ""
 topic = mqforward/#
 
 [mqforward-influxdb]
+# Use either URL or host name and port to configure how to connect to InfluxDB 
+# url = https://127.0.01/subpath
 hostname = 127.0.0.1
 port = 8086
 db = test

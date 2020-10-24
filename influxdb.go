@@ -20,6 +20,7 @@ const (
 type InfluxDBConf struct {
 	Hostname       string
 	Port           int
+	Url            string
 	Db             string
 	UserName       string
 	Password       string
@@ -43,7 +44,10 @@ type InfluxDBClient struct {
 }
 
 func NewInfluxDBClient(conf InfluxDBConf, ifChan chan Message, commandChan chan string) (*InfluxDBClient, error) {
-	host := fmt.Sprintf("http://%s:%d", conf.Hostname, conf.Port)
+	host := conf.Url
+	if len(host) == 0 {
+		host = fmt.Sprintf("http://%s:%d", conf.Hostname, conf.Port)
+	}
 	log.Infof("influxdb host: %s", host)
 
 	_, err := url.Parse(host)
