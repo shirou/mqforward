@@ -51,12 +51,16 @@ Config example is below. If you put config to `~/.mqforward.ini`, it will be loa
    topic = mqforward/#
 
    [mqforward-influxdb]
+   # url = https://127.0.01/subpath
    hostname = 127.0.0.1
+   scheme = http # or https
    port = 4444
    db = test
    username = root
    password = root
-
+   caCerts = ~/.certs/cacert.pem # can be empty
+   insecure = true # if certificates are not checked
+   
 run
 +++++++++++++++
 

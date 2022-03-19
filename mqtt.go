@@ -178,7 +178,7 @@ func getCertPool(pemPath string) (*x509.CertPool, error) {
 	return certs, nil
 }
 
-// makeTlsConfig creats new tls.Config. If returned ok is false, does not need set to MQTToption.
+// makeTlsConfig creates new tls.Config. If returned ok is false, does not need set to MQTToption.
 func makeTlsConfig(cafile, cert, key string, insecure bool) (*tls.Config, bool, error) {
 	TLSConfig := &tls.Config{InsecureSkipVerify: false}
 	var ok bool

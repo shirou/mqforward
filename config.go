@@ -30,9 +30,12 @@ func UserHomeDir() string {
 	return os.Getenv("HOME")
 }
 
+func ExpandPath(path string) string {
+	return strings.Replace(path, "~", UserHomeDir(), 1)
+}
+
 func LoadConf(path string) (MqttConf, InfluxDBConf, error) {
-	home := UserHomeDir()
-	path = strings.Replace(path, "~", home, 1)
+	path = ExpandPath(path)
 
 	var cfg Config
 	err := gcfg.ReadFileInto(&cfg, path)
