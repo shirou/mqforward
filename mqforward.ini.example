@@ -12,7 +12,9 @@ topic = mqforward/#
 # Use either URL or host name and port to configure how to connect to InfluxDB 
 # url = https://127.0.01/subpath
 hostname = 127.0.0.1
+scheme = http
 port = 8086
+insecure = true # if certificates are not checked
 db = test
 username = test
 password = password
