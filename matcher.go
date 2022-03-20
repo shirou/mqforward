@@ -28,7 +28,7 @@ func (m *DirectMatcher) Match(part string) (bool, string) {
 }
 
 func (m *DirectMatcher) Name() string {
-	return m.part
+	return ""
 }
 
 type RegexMatcher struct {
@@ -68,9 +68,10 @@ func SymbolName(part string) string {
 	return result
 }
 
-const MatchAll = "[^\\]+"
+const MatchAll = "[^\\\\]+"
 
 func SplitSymbol(part string) (string, string) {
+	part = SymbolName(part)
 	result := strings.Split(part, ":")
 	if len(result) >= 2 {
 		return result[0], result[1]
@@ -78,7 +79,7 @@ func SplitSymbol(part string) (string, string) {
 	return result[0], MatchAll
 }
 
-func CreateMatchers(topicPath string) []Matcher {
+func createMatchers(topicPath string) []Matcher {
 	m := []Matcher{}
 
 	v := strings.Split(topicPath, MqttSeparator)
@@ -100,7 +101,7 @@ type TopicMatcher struct {
 
 func NewTopicMatcher(topicPath string) *TopicMatcher {
 	return &TopicMatcher{
-		matchers: CreateMatchers(topicPath),
+		matchers: createMatchers(topicPath),
 	}
 }
 
@@ -116,7 +117,11 @@ func (m *TopicMatcher) Match(topic string) (bool, map[string]string) {
 		if !match {
 			return false, result
 		}
-		result[matcher.Name()] = value
+		name := matcher.Name()
+		if len(name) > 0 {
+			result[name] = value
+		}
+
 	}
 
 	return true, result
