@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/url"
-	"strings"
 	"time"
 
 	log "github.com/Sirupsen/logrus"
@@ -39,6 +38,7 @@ type InfluxDBConf struct {
 type InfluxDBClient struct {
 	Client influxdb.Client
 	Config InfluxDBConf
+	Coder  *MqttSeriesEncoder
 
 	Status string
 	Tick   int
@@ -97,6 +97,7 @@ func NewInfluxDBClient(conf InfluxDBConf, ifChan chan Message, commandChan chan 
 	if err != nil {
 		return nil, err
 	}
+
 	// Check connectivity
 	_, _, err = con.Ping(PingTimeout)
 	if err != nil {
@@ -113,6 +114,7 @@ func NewInfluxDBClient(conf InfluxDBConf, ifChan chan Message, commandChan chan 
 	ifc := InfluxDBClient{
 		Client: con,
 		Tick:   tick,
+		Coder:  NewMqttSeriesEncoder(&conf),
 		Status: StatusStopped,
 		Config: conf,
 		// prepare 2times by MaxBufferSize for Buffer itself
@@ -148,7 +150,7 @@ func (ifc *InfluxDBClient) Send() error {
 		}
 		buf[i] = m
 	}
-	bp := ifc.Msg2Series(buf)
+	bp := ifc.Coder.Encode(buf)
 
 	if err = ifc.Client.Write(bp); err != nil {
 		return err
@@ -190,55 +192,4 @@ func (ifc *InfluxDBClient) Start() error {
 		}
 	}
 	return nil
-}
-
-func (ifc *InfluxDBClient) Msg2Series(msgs []Message) influxdb.BatchPoints {
-	now := time.Now()
-
-	// Create a new point batch
-	bp, err := influxdb.NewBatchPoints(influxdb.BatchPointsConfig{
-		Database:  ifc.Config.Db,
-		Precision: "s",
-	})
-
-	if err != nil {
-		log.Warn(err)
-		return nil
-	}
-
-	for _, msg := range msgs {
-		if msg.Topic == "" && len(msg.Payload) == 0 {
-			break
-		}
-		j, err := MsgParse(msg.Payload)
-		if err != nil {
-			log.Warn(err)
-			continue
-		}
-
-		name := strings.Replace(msg.Topic, "/", ".", -1)
-
-		// Store default tag attributes
-		tags := map[string]string{
-			"topic": msg.Topic,
-		}
-		// Transform user-defined JSON fields to tags
-		for _, tag := range ifc.Config.TagsAttributes {
-			if v, ok := j[tag]; ok {
-				if tagVal, ok := v.(string); ok {
-					tags[tag] = tagVal
-					delete(j, tag)
-				}
-			}
-		}
-
-		pt, err := influxdb.NewPoint(name, tags, j, now)
-		if err != nil {
-			log.Warn(err)
-			continue
-		}
-		bp.AddPoint(pt)
-	}
-
-	return bp
 }
