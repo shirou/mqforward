@@ -32,6 +32,7 @@ type InfluxDBConf struct {
 	TagsAttributes []string
 	TopicMap       []string // maps the end of the mqtt topic to tags `weather/{loc}/{sensor}`
 	NoTopicTag     bool     // does not forward the topic as tag
+	Series         string   // override the series name instead of topic mapping
 	CaCerts        []string
 	Scheme         string
 	Insecure       bool // skips certificate validation

@@ -54,7 +54,10 @@ func (ifc *MqttSeriesEncoder) Encode(msgs []Message) influxdb.BatchPoints {
 			continue
 		}
 
-		name := strings.Replace(msg.Topic, "/", ".", -1)
+		name := ifc.Config.Series
+		if len(name) == 0 {
+			name = strings.Replace(msg.Topic, "/", ".", -1)
+		}
 
 		tags := map[string]string{}
 

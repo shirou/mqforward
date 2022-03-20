@@ -93,13 +93,14 @@ func Test_TagMapping(t *testing.T) {
 		Db:         "db",
 		TopicMap:   []string{"p/{loc}/{sensor}"},
 		NoTopicTag: true,
+		Series:     "data",
 	}
 	coder := NewMqttSeriesEncoder(conf)
 
 	ret := coder.Encode(msgs)
 	assert.Equal(2, len(ret.Points()))
 	for _, r := range ret.Points() {
-		assert.Equal("p.a.b", r.Name())
+		assert.Equal("data", r.Name())
 		e := map[string]interface{}{
 			"x": float64(1),
 			"y": float64(2),
