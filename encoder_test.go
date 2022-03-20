@@ -82,11 +82,11 @@ func Test_TagMapping(t *testing.T) {
 	msgs := []Message{
 		{
 			Topic:   "p/a/b",
-			Payload: []byte(`{"x": 1, "y": 2, "loc": "top"}`),
+			Payload: []byte(`{"x": 1, "y": 2}`),
 		},
 		{
 			Topic:   "p/a/b",
-			Payload: []byte(`{"x": 1, "y": 2, "loc": "top"}`),
+			Payload: []byte(`{"x": 1, "y": 2}`),
 		},
 	}
 	conf := &InfluxDBConf{
@@ -99,7 +99,7 @@ func Test_TagMapping(t *testing.T) {
 	ret := coder.Encode(msgs)
 	assert.Equal(2, len(ret.Points()))
 	for _, r := range ret.Points() {
-		assert.Equal("a.b", r.Name())
+		assert.Equal("p.a.b", r.Name())
 		e := map[string]interface{}{
 			"x": float64(1),
 			"y": float64(2),

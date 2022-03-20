@@ -60,6 +60,7 @@ Config example is below. If you put config to `~/.mqforward.ini`, it will be loa
    password = root
    caCerts = ~/.certs/cacert.pem # can be empty
    insecure = true # if certificates are not checked
+   topicMap = mqforward/{location}/{sensor} # creates tags 'location' and 'sensor' from topic path
    
 run
 +++++++++++++++
