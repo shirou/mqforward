@@ -9,11 +9,11 @@ import (
 func Test_Encoder(t *testing.T) {
 	assert := assert.New(t)
 	msgs := []Message{
-		Message{
+		{
 			Topic:   "a/b",
 			Payload: []byte(`{"x": 1, "y": 2}`),
 		},
-		Message{
+		{
 			Topic:   "a/b",
 			Payload: []byte(`{"x": 1, "y": 2}`),
 		},
@@ -41,11 +41,11 @@ func Test_Encoder(t *testing.T) {
 func Test_Tags(t *testing.T) {
 	assert := assert.New(t)
 	msgs := []Message{
-		Message{
+		{
 			Topic:   "a/b",
 			Payload: []byte(`{"x": 1, "y": 2, "loc": "top"}`),
 		},
-		Message{
+		{
 			Topic:   "a/b",
 			Payload: []byte(`{"x": 1, "y": 2, "loc": "top"}`),
 		},
@@ -71,6 +71,47 @@ func Test_Tags(t *testing.T) {
 		tags := map[string]string{
 			"topic": "a/b",
 			"loc":   "top",
+		}
+		actualTags := r.Tags()
+		assert.Equal(tags, actualTags)
+	}
+}
+
+func Test_TagMapping(t *testing.T) {
+	assert := assert.New(t)
+	msgs := []Message{
+		{
+			Topic:   "p/a/b",
+			Payload: []byte(`{"x": 1, "y": 2}`),
+		},
+		{
+			Topic:   "p/a/b",
+			Payload: []byte(`{"x": 1, "y": 2}`),
+		},
+	}
+	conf := &InfluxDBConf{
+		Db:         "db",
+		TopicMap:   []string{"p/{loc}/{sensor}"},
+		NoTopicTag: true,
+		Series:     "data",
+	}
+	coder := NewMqttSeriesEncoder(conf)
+
+	ret := coder.Encode(msgs)
+	assert.Equal(2, len(ret.Points()))
+	for _, r := range ret.Points() {
+		assert.Equal("data", r.Name())
+		e := map[string]interface{}{
+			"x": float64(1),
+			"y": float64(2),
+		}
+		actual, err := r.Fields()
+		assert.NoError(err)
+		assert.Equal(e, actual)
+
+		tags := map[string]string{
+			"loc":    "a",
+			"sensor": "b",
 		}
 		actualTags := r.Tags()
 		assert.Equal(tags, actualTags)

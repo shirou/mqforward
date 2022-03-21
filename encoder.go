@@ -9,12 +9,24 @@ import (
 )
 
 type MqttSeriesEncoder struct {
-	Config *InfluxDBConf
+	Config   *InfluxDBConf
+	matchers []TopicMatcher
+}
+
+func createTopicMatcher(topicMap []string) []TopicMatcher {
+	m := []TopicMatcher{}
+
+	for _, t := range topicMap {
+		m = append(m, *NewTopicMatcher(t))
+	}
+
+	return m
 }
 
 func NewMqttSeriesEncoder(conf *InfluxDBConf) *MqttSeriesEncoder {
 	return &MqttSeriesEncoder{
-		Config: conf,
+		Config:   conf,
+		matchers: createTopicMatcher(conf.TopicMap),
 	}
 }
 
@@ -42,12 +54,18 @@ func (ifc *MqttSeriesEncoder) Encode(msgs []Message) influxdb.BatchPoints {
 			continue
 		}
 
-		name := strings.Replace(msg.Topic, "/", ".", -1)
+		name := ifc.Config.Series
+		if len(name) == 0 {
+			name = strings.Replace(msg.Topic, "/", ".", -1)
+		}
+
+		tags := map[string]string{}
 
 		// Store default tag attributes
-		tags := map[string]string{
-			"topic": msg.Topic,
+		if !ifc.Config.NoTopicTag {
+			tags["topic"] = msg.Topic
 		}
+
 		// Transform user-defined JSON fields to tags
 		for _, tag := range ifc.Config.TagsAttributes {
 			if v, ok := j[tag]; ok {
@@ -55,6 +73,17 @@ func (ifc *MqttSeriesEncoder) Encode(msgs []Message) influxdb.BatchPoints {
 					tags[tag] = tagVal
 					delete(j, tag)
 				}
+			}
+		}
+
+		// Append first match from TopicMap
+		for _, m := range ifc.matchers {
+			b, v := m.Match(msg.Topic)
+			if b {
+				for tag, tagVal := range v {
+					tags[tag] = tagVal
+				}
+				break
 			}
 		}
 
