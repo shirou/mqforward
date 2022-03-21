@@ -1,3 +1,6 @@
+//go:build integration
+// +build integration
+
 package main
 
 import (
@@ -12,31 +15,6 @@ import (
 	influxdb "github.com/influxdata/influxdb/client"
 	"github.com/stretchr/testify/assert"
 )
-
-func Test_Msg2Series(t *testing.T) {
-	assert := assert.New(t)
-	msgs := []Message{
-		Message{
-			Topic:   "a/b",
-			Payload: []byte(`{"x": 1, "y": 2}`),
-		},
-		Message{
-			Topic:   "a/b",
-			Payload: []byte(`{"x": 1, "y": 2}`),
-		},
-	}
-
-	ret := Msg2Series(msgs)
-	assert.Equal(2, len(ret.Points))
-	for _, r := range ret.Points {
-		assert.Equal("a.b", r.Measurement)
-		e := map[string]interface{}{
-			"x": float64(1),
-			"y": float64(2),
-		}
-		assert.Equal(e, r.Fields)
-	}
-}
 
 func Test_Write(t *testing.T) {
 	assert := assert.New(t)
@@ -87,5 +65,4 @@ func Test_Write(t *testing.T) {
 	if err != nil {
 		log.Fatal(err)
 	}
-
 }
