@@ -35,14 +35,12 @@ type MqttClient struct {
 	Config     MqttConf
 	Subscribed map[string]byte
 
-	mqttChan    chan Message // chan to forwarder
-	commandChan chan string  // chan from forwarder
-	lock        *sync.Mutex  // use for reconnect
+	mqttChan chan Message // chan to forwarder
+	lock     *sync.Mutex  // use for reconnect
 }
 
-//
 // with Connects connect to the MQTT broker with Options.
-func NewMqttClient(conf MqttConf, mqttChan chan Message, commandChan chan string) (*MqttClient, error) {
+func NewMqttClient(conf MqttConf, mqttChan chan Message) (*MqttClient, error) {
 	opts := MQTT.NewClientOptions()
 
 	port := conf.Port
@@ -85,11 +83,10 @@ func NewMqttClient(conf MqttConf, mqttChan chan Message, commandChan chan string
 	}
 
 	ret := &MqttClient{
-		Config:      conf,
-		Subscribed:  subscribed,
-		lock:        new(sync.Mutex),
-		mqttChan:    mqttChan,
-		commandChan: commandChan,
+		Config:     conf,
+		Subscribed: subscribed,
+		lock:       new(sync.Mutex),
+		mqttChan:   mqttChan,
 	}
 	opts.SetOnConnectHandler(ret.SubscribeOnConnect)
 	opts.SetConnectionLostHandler(ret.ConnectionLost)
