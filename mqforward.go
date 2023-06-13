@@ -17,9 +17,8 @@ type Forwarder struct {
 	mqclient *MqttClient
 	ifclient *InfluxDBClient
 
-	mqttChan    chan Message
-	ifChan      chan Message
-	commandChan chan string
+	mqttChan chan Message
+	ifChan   chan Message
 }
 
 func NewForwarder(mqttconf MqttConf, ifconf InfluxDBConf) (*Forwarder, error) {
@@ -27,25 +26,22 @@ func NewForwarder(mqttconf MqttConf, ifconf InfluxDBConf) (*Forwarder, error) {
 	mqttChan := make(chan Message, MaxBufferSize)
 	// channel  to InfluxDB
 	ifChan := make(chan Message, MaxBufferSize)
-	// channel main to MQTT
-	commandChan := make(chan string)
 
-	mqclient, err := NewMqttClient(mqttconf, mqttChan, commandChan)
+	mqclient, err := NewMqttClient(mqttconf, mqttChan)
 	if err != nil {
 		return nil, fmt.Errorf("mqtt init err: %s", err)
 	}
-	ifclient, err := NewInfluxDBClient(ifconf, ifChan, commandChan)
+	ifclient, err := NewInfluxDBClient(ifconf, ifChan)
 	if err != nil {
 		return nil, fmt.Errorf("influxdb init err: %s", err)
 	}
 	go ifclient.Start()
 
 	return &Forwarder{
-		mqclient:    mqclient,
-		ifclient:    ifclient,
-		mqttChan:    mqttChan,
-		ifChan:      ifChan,
-		commandChan: commandChan,
+		mqclient: mqclient,
+		ifclient: ifclient,
+		mqttChan: mqttChan,
+		ifChan:   ifChan,
 	}, nil
 }
 

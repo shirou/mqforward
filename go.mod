@@ -9,7 +9,7 @@ require (
 	github.com/influxdata/influxdb1-client v0.0.0-20220302092344-a9ab5670611c
 	github.com/mattn/go-colorable v0.1.12
 	github.com/oleiade/lane v1.0.1
-	github.com/stretchr/testify v1.7.1
+	github.com/stretchr/testify v1.8.0
 	github.com/urfave/cli/v2 v2.4.0
 	github.com/vmihailenco/msgpack v4.0.4+incompatible
 	gopkg.in/gcfg.v1 v1.2.3
@@ -58,10 +58,13 @@ require (
 	gopkg.in/airbrake/gobrake.v2 v2.0.9 // indirect
 	gopkg.in/gemnasium/logrus-airbrake-hook.v2 v2.1.2 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
-	gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
 require (
+	github.com/deepmap/oapi-codegen v1.8.2 // indirect
+	github.com/influxdata/influxdb-client-go/v2 v2.12.3 // indirect
+	github.com/influxdata/line-protocol v0.0.0-20200327222509-2487e7298839 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
 	golang.org/x/sys v0.5.0 // indirect
 )
