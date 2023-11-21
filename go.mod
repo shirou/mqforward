@@ -6,9 +6,9 @@ require (
 	github.com/Sirupsen/logrus v1.0.6
 	github.com/eclipse/paho.mqtt.golang v1.3.5
 	github.com/influxdata/influxdb v1.9.6
-	github.com/influxdata/influxdb1-client v0.0.0-20220302092344-a9ab5670611c
+	github.com/influxdata/influxdb-client-go/v2 v2.12.3
+	github.com/influxdata/line-protocol v0.0.0-20200327222509-2487e7298839
 	github.com/mattn/go-colorable v0.1.12
-	github.com/oleiade/lane v1.0.1
 	github.com/stretchr/testify v1.8.0
 	github.com/urfave/cli/v2 v2.4.0
 	github.com/vmihailenco/msgpack v4.0.4+incompatible
@@ -48,10 +48,10 @@ require (
 	go.uber.org/atomic v1.6.0 // indirect
 	go.uber.org/multierr v1.5.0 // indirect
 	go.uber.org/zap v1.14.1 // indirect
-	golang.org/x/crypto v0.0.0-20220315160706-3147a52a75dd // indirect
-	golang.org/x/net v0.7.0 // indirect
+	golang.org/x/crypto v0.14.0 // indirect
+	golang.org/x/net v0.17.0 // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
-	golang.org/x/term v0.5.0 // indirect
+	golang.org/x/term v0.13.0 // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
@@ -63,8 +63,6 @@ require (
 
 require (
 	github.com/deepmap/oapi-codegen v1.8.2 // indirect
-	github.com/influxdata/influxdb-client-go/v2 v2.12.3 // indirect
-	github.com/influxdata/line-protocol v0.0.0-20200327222509-2487e7298839 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
-	golang.org/x/sys v0.5.0 // indirect
+	golang.org/x/sys v0.13.0 // indirect
 )
