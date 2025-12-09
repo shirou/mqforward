@@ -1,10 +1,10 @@
 module github.com/shirou/mqforward
 
-go 1.17
+go 1.24.0
 
 require (
 	github.com/Sirupsen/logrus v1.0.6
-	github.com/eclipse/paho.mqtt.golang v1.3.5
+	github.com/eclipse/paho.mqtt.golang v1.5.1
 	github.com/influxdata/influxdb v1.9.6
 	github.com/influxdata/influxdb-client-go/v2 v2.12.3
 	github.com/influxdata/line-protocol v0.0.0-20200327222509-2487e7298839
@@ -29,7 +29,7 @@ require (
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/flatbuffers v2.0.0+incompatible // indirect
 	github.com/google/go-cmp v0.5.6 // indirect
-	github.com/gorilla/websocket v1.5.0 // indirect
+	github.com/gorilla/websocket v1.5.3 // indirect
 	github.com/influxdata/flux v0.140.0 // indirect
 	github.com/influxdata/influxql v1.1.1-0.20211004132434-7e7d61973256 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.1 // indirect
@@ -48,10 +48,10 @@ require (
 	go.uber.org/atomic v1.6.0 // indirect
 	go.uber.org/multierr v1.5.0 // indirect
 	go.uber.org/zap v1.14.1 // indirect
-	golang.org/x/crypto v0.35.0 // indirect
-	golang.org/x/net v0.36.0 // indirect
-	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
-	golang.org/x/term v0.29.0 // indirect
+	golang.org/x/crypto v0.42.0 // indirect
+	golang.org/x/net v0.44.0 // indirect
+	golang.org/x/sync v0.17.0 // indirect
+	golang.org/x/term v0.35.0 // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/protobuf v1.33.0 // indirect
@@ -64,5 +64,5 @@ require (
 require (
 	github.com/deepmap/oapi-codegen v1.8.2 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
-	golang.org/x/sys v0.30.0 // indirect
+	golang.org/x/sys v0.36.0 // indirect
 )
